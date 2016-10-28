@@ -24,3 +24,5 @@ run on a weekly basis to clean the S3 leaving just one backup per week.
 * Make another script to clean and leave 1 backup per month on a monthly
   basis
 * Make the setup script to install python, pip and awscli
+* Pimp the output of the setup script to add verbosity and colors
+* Extend to other DB engines
