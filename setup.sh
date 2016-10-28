@@ -18,6 +18,7 @@ echo "tar -zcvf db_\$DATE.tar.gz db_\$DATE.sql" >> backup_script.sh
 echo "rm db_\$DATE.sql" >> backup_script.sh
 echo "`which aws` s3 cp db_\$DATE.tar.gz s3://$BUCKET$BUCKET_PATH/" >> backup_script.sh
 echo "Backup script created succesfully \e[32m\u2714"
+chmod +x backup_script.sh
 
 #CLEANUP SCRIPT CREATION
 echo "Creating the cleanup script..."
@@ -31,12 +32,13 @@ echo "rm db_\$(/bin/date --date \"-\$i day\" +%d%m%Y).tar.gz;" >> cleanup_script
 echo "`which aws` s3 rm s3://$BUCKET$BUCKET_PATH/db_\$(/bin/date --date \"-\$i day\" +%d%m%Y).tar.gz" >> cleanup_script.sh
 echo "done" >> cleanup_script.sh
 echo "Cleanup script created succesfully \e[32m\u2714"
+chmod +x cleanup_script.sh
 
 # Write out current crontab
 crontab -l > mycron
 # echo new cron into cron file
-echo "00 00 * * * cd && ./backup_script.sh" >> mycron
-echo "30 00 * * 6 cd && ./cleanup_script.sh" >> mycron
+echo "00 00 * * * cd `pwd` && ./backup_script.sh" >> mycron
+echo "30 00 * * 6 cd `pwd` && ./cleanup_script.sh" >> mycron
 # Install new cron file
 crontab mycron
 # Delete the temporary file
